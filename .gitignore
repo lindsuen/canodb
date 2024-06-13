@@ -17,3 +17,5 @@ __MACOSX/
 *.exe~
 main
 canodb
+/bin
+/data
