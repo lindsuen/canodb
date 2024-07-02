@@ -7,8 +7,9 @@
 package config
 
 import (
-	"github.com/go-ini/ini"
 	"log"
+
+	"github.com/go-ini/ini"
 )
 
 type connectionConfig struct {
@@ -16,20 +17,11 @@ type connectionConfig struct {
 	Port    string `ini:"port"`
 }
 
-type sslConfig struct {
-	SSL         string `ini:"ssl"`
-	SSLCAFile   string `ini:"ssl_ca_file"`
-	SSLCertFile string `ini:"ssl_cert_file"`
-	SSLKeyFile  string `ini:"ssl_key_file"`
-	SSLCiphers  string `ini:"ssl_ciphers"`
-}
-
 type dataConfig struct {
 	DataDirectory string `ini:"data_directory"`
 }
 
 var ConnectionConfig = new(connectionConfig)
-var SSLConfig = new(sslConfig)
 var DataConfig = new(dataConfig)
 
 var cfg = new(ini.File)
@@ -43,7 +35,6 @@ func InitConfig() {
 		log.Fatalln(err)
 	}
 	mapTo("connection", ConnectionConfig)
-	mapTo("ssl", SSLConfig)
 	mapTo("data", DataConfig)
 }
 
