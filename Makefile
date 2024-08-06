@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD 2-Clause License that can be
 # found in the LICENSE file.
 
-APP := canodb
+APP := canodb-cli
 BINDIR := bin
-CONFDIR := config
 
 .PHONY: all clean build linux freebsd
 
@@ -21,15 +20,15 @@ build:
 linux:
 	@# linux-amd64:
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${BINDIR}/${APP} -ldflags "-s -w" .
-	@cp -r ${CONFDIR}/ ${BINDIR}/ && cd ${BINDIR}/ && tar -zcf ${APP}-linux_amd64.tar.gz ${APP} ${CONFDIR}/ && rm -rf ${APP} ${CONFDIR}/ && cd ../
+	@cp -r ${BINDIR}/ && cd ${BINDIR}/ && tar -zcf ${APP}-linux_amd64.tar.gz ${APP} && rm -rf ${APP} && cd ../
 	@# linux-arm64:
 	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o ${BINDIR}/${APP} -ldflags "-s -w" .
-	@cp -r ${CONFDIR}/ ${BINDIR}/ && cd ${BINDIR}/ && tar -zcf ${APP}-linux_arm64.tar.gz ${APP} ${CONFDIR}/ && rm -rf ${APP} ${CONFDIR}/ && cd ../
+	@cp -r ${BINDIR}/ && cd ${BINDIR}/ && tar -zcf ${APP}-linux_arm64.tar.gz ${APP} && rm -rf ${APP} && cd ../
 
 freebsd:
 	@# freebsd-amd64:
 	CGO_ENABLED=0 GOOS=freebsd GOARCH=amd64 go build -o ${BINDIR}/${APP} -ldflags "-s -w" .
-	@cp -r ${CONFDIR}/ ${BINDIR}/ && cd ${BINDIR}/ && tar -jcf ${APP}-freebsd_amd64.tar.bz2 ${APP} ${CONFDIR}/ && rm -rf ${APP} ${CONFDIR}/ && cd ../
+	@cp -r ${BINDIR}/ && cd ${BINDIR}/ && tar -jcf ${APP}-freebsd_amd64.tar.bz2 ${APP} && rm -rf ${APP} && cd ../
 	@# freebsd-arm64:
 	CGO_ENABLED=0 GOOS=freebsd GOARCH=arm64 go build -o ${BINDIR}/${APP} -ldflags "-s -w" .
-	@cp -r ${CONFDIR}/ ${BINDIR}/ && cd ${BINDIR}/ && tar -jcf ${APP}-freebsd_arm64.tar.bz2 ${APP} ${CONFDIR}/ && rm -rf ${APP} ${CONFDIR}/ && cd ../
+	@cp -r ${BINDIR}/ && cd ${BINDIR}/ && tar -jcf ${APP}-freebsd_arm64.tar.bz2 ${APP} && rm -rf ${APP} && cd ../
