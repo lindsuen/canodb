@@ -6,7 +6,9 @@
 ![GitHub Release](https://img.shields.io/github/v/release/lindsuen/canodb)
 ![GitHub License](https://img.shields.io/github/license/lindsuen/canodb)
 
-CanoDB is a key-value database based on goLevelDB.
+## Introduction
+
+CanoDB is a key-value database based on [goLevelDB](https://github.com/syndtr/goleveldb).
 
 ## License
 
