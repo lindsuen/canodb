@@ -17,5 +17,5 @@ __MACOSX/
 *.exe~
 main
 canodb
+canodb-cli
 /bin
-/data
