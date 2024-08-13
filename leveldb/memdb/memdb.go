@@ -271,7 +271,7 @@ func (p *DB) findLast() int {
 }
 
 // Put sets the value for the given key. It overwrites any previous value
-// for that key; a DB is not a multi-map.
+// for that key; a DB is not a multimap.
 //
 // It is safe to modify the contents of the arguments after Put returns.
 func (p *DB) Put(key []byte, value []byte) error {
@@ -417,7 +417,7 @@ func (p *DB) Capacity() int {
 
 // Size returns sum of keys and values length. Note that deleted
 // key/value will not be accounted for, but it will still consume
-// the buffer, since the buffer is append only.
+// the buffer, since the buffer is appended only.
 func (p *DB) Size() int {
 	p.mu.RLock()
 	defer p.mu.RUnlock()

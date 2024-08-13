@@ -148,11 +148,11 @@ const (
 	// This has effect on both 'read operation' and compaction.
 	StrictBlockChecksum
 
-	// If present then a corrupted 'sorted table' will fails compaction.
+	// If present then a corrupted 'sorted table' will fail compaction.
 	// The database will enter read-only mode.
 	StrictCompaction
 
-	// If present then a corrupted 'sorted table' will halts 'read operation'.
+	// If present then a corrupted 'sorted table' will halt 'read operation'.
 	StrictReader
 
 	// If present then leveldb.Recover will drop corrupted 'sorted table'.
@@ -194,7 +194,7 @@ type Options struct {
 	// The default value is 8MiB.
 	BlockCacheCapacity int
 
-	// BlockCacheEvictRemoved allows enable forced-eviction on cached block belonging
+	// BlockCacheEvictRemoved allows to enable forced-eviction on cached block belonging
 	// to removed 'sorted table'.
 	//
 	// The default if false.
@@ -291,24 +291,24 @@ type Options struct {
 	// The default value (DefaultCompression) uses snappy compression.
 	Compression Compression
 
-	// DisableBufferPool allows disable use of util.BufferPool functionality.
+	// DisableBufferPool allows to disable use of util.BufferPool functionality.
 	//
 	// The default value is false.
 	DisableBufferPool bool
 
-	// DisableBlockCache allows disable use of cache.Cache functionality on
+	// DisableBlockCache allows to disable use of cache.Cache functionality on
 	// 'sorted table' block.
 	//
 	// The default value is false.
 	DisableBlockCache bool
 
-	// DisableCompactionBackoff allows disable compaction retry backoff.
+	// DisableCompactionBackoff allows to disable compaction retry backoff.
 	//
 	// The default value is false.
 	DisableCompactionBackoff bool
 
 	// DisableLargeBatchTransaction allows disabling switch-to-transaction mode
-	// on large batch write. If enable batch writes large than WriteBuffer will
+	// on large batch write. If enable batch writes larger than WriteBuffer will
 	// use transaction.
 	//
 	// The default is false.
@@ -322,13 +322,13 @@ type Options struct {
 	// The default is false.
 	DisableSeeksCompaction bool
 
-	// ErrorIfExist defines whether an error should returned if the DB already
+	// ErrorIfExist defines whether an error should be returned if the DB already
 	// exist.
 	//
 	// The default value is false.
 	ErrorIfExist bool
 
-	// ErrorIfMissing defines whether an error should returned if the DB is
+	// ErrorIfMissing defines whether an error should be returned if the DB is
 	// missing. If false then the database will be created if missing, otherwise
 	// an error will be returned.
 	//
@@ -378,7 +378,7 @@ type Options struct {
 	// OpenFilesCacheCapacity defines the capacity of the open files caching.
 	// Use -1 for zero, this has same effect as specifying NoCacher to OpenFilesCacher.
 	//
-	// The default value is 200 on MacOS and 500 on other.
+	// The default value is 200 on macOS and 500 on others.
 	OpenFilesCacheCapacity int
 
 	// If true then opens DB in read-only mode.
@@ -393,7 +393,7 @@ type Options struct {
 	// 'sorted table'. 'memdb' is an in-memory DB backed by an on-disk
 	// unsorted journal.
 	//
-	// LevelDB may held up to two 'memdb' at the same time.
+	// LevelDB may be held up to two 'memdb' at the same time.
 	//
 	// The default value is 4MiB.
 	WriteBuffer int
@@ -696,7 +696,7 @@ func (o *Options) GetFilterBaseLg() int {
 type ReadOptions struct {
 	// DontFillCache defines whether block reads for this 'read operation'
 	// should be cached. If false then the block will be cached. This does
-	// not affects already cached block.
+	// not affect already cached block.
 	//
 	// The default value is false.
 	DontFillCache bool
