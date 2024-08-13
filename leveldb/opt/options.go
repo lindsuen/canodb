@@ -131,34 +131,34 @@ const (
 type Strict uint
 
 const (
-	// If present then a corrupted or invalid chunk or block in manifest
+	// StrictManifest If present then a corrupted or invalid chunk or block in manifest
 	// journal will cause an error instead of being dropped.
 	// This will prevent database with corrupted manifest to be opened.
 	StrictManifest Strict = 1 << iota
 
-	// If present then journal chunk checksum will be verified.
+	// StrictJournalChecksum If present then journal chunk checksum will be verified.
 	StrictJournalChecksum
 
-	// If present then a corrupted or invalid chunk or block in journal
+	// StrictJournal If present then a corrupted or invalid chunk or block in journal
 	// will cause an error instead of being dropped.
 	// This will prevent database with corrupted journal to be opened.
 	StrictJournal
 
-	// If present then 'sorted table' block checksum will be verified.
+	// StrictBlockChecksum If present then 'sorted table' block checksum will be verified.
 	// This has effect on both 'read operation' and compaction.
 	StrictBlockChecksum
 
-	// If present then a corrupted 'sorted table' will fail compaction.
+	// StrictCompaction If present then a corrupted 'sorted table' will fail compaction.
 	// The database will enter read-only mode.
 	StrictCompaction
 
-	// If present then a corrupted 'sorted table' will halt 'read operation'.
+	// StrictReader If present then a corrupted 'sorted table' will halt 'read operation'.
 	StrictReader
 
-	// If present then leveldb.Recover will drop corrupted 'sorted table'.
+	// StrictRecovery If present then leveldb.Recover will drop corrupted 'sorted table'.
 	StrictRecovery
 
-	// This only applicable for ReadOptions, if present then this ReadOptions
+	// StrictOverride This only applicable for ReadOptions, if present then this ReadOptions
 	// 'strict level' will override global ones.
 	StrictOverride
 

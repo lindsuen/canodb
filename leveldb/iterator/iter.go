@@ -52,15 +52,16 @@ type IteratorSeeker interface {
 type CommonIterator interface {
 	IteratorSeeker
 
-	// util.Releaser is the interface that wraps basic Release method.
+	// Releaser is the interface that wraps basic Release method.
 	// When called Release will release any resources associated with the
 	// iterator.
 	util.Releaser
 
-	// util.ReleaseSetter is the interface that wraps the basic SetReleaser
+	// ReleaseSetter is the interface that wraps the basic SetReleaser
 	// method.
 	util.ReleaseSetter
 
+	// Valid
 	// TODO: Remove this when ready.
 	Valid() bool
 
