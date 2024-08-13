@@ -201,12 +201,12 @@ func AllKeyValueTesting(rnd *rand.Rand, body, setup func(KeyValue) DB, teardown 
 	}
 
 	Describe("with no key/value (empty)", Test(&KeyValue{}))
-	Describe("with empty key", Test(KeyValue_EmptyKey()))
-	Describe("with empty value", Test(KeyValue_EmptyValue()))
-	Describe("with one key/value", Test(KeyValue_OneKeyValue()))
-	Describe("with big value", Test(KeyValue_BigValue()))
-	Describe("with special key", Test(KeyValue_SpecialKey()))
-	Describe("with multiple key/value", Test(KeyValue_MultipleKeyValue()))
-	Describe("with generated key/value 2-incr", Test(KeyValue_Generate(nil, 120, 2, 1, 50, 10, 120)))
-	Describe("with generated key/value 3-incr", Test(KeyValue_Generate(nil, 120, 3, 1, 50, 10, 120)))
+	Describe("with empty key", Test(KvEmptyKey()))
+	Describe("with empty value", Test(KvEmptyValue()))
+	Describe("with one key/value", Test(KvOneKeyValue()))
+	Describe("with big value", Test(KvBigValue()))
+	Describe("with special key", Test(KvSpecialKey()))
+	Describe("with multiple key/value", Test(KvMultipleKeyValue()))
+	Describe("with generated key/value 2-incr", Test(KvGenerate(nil, 120, 2, 1, 50, 10, 120)))
+	Describe("with generated key/value 3-incr", Test(KvGenerate(nil, 120, 3, 1, 50, 10, 120)))
 }

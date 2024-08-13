@@ -27,16 +27,16 @@ func (s *session) setOptions(o *opt.Options) {
 	// Alternative filters.
 	if filters := o.GetAltFilters(); len(filters) > 0 {
 		no.AltFilters = make([]filter.Filter, len(filters))
-		for i, filter := range filters {
-			no.AltFilters[i] = &iFilter{filter}
+		for i, f := range filters {
+			no.AltFilters[i] = &iFilter{f}
 		}
 	}
 	// Comparer.
 	s.icmp = &iComparer{o.GetComparer()}
 	no.Comparer = s.icmp
 	// Filter.
-	if filter := o.GetFilter(); filter != nil {
-		no.Filter = &iFilter{filter}
+	if f := o.GetFilter(); f != nil {
+		no.Filter = &iFilter{f}
 	}
 
 	s.o = &cachedOptions{Options: no}

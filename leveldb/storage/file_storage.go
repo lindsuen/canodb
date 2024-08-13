@@ -362,7 +362,7 @@ func (fs *fileStorage) GetMeta() (FileDesc, error) {
 			cur, err = tryCurrent(name)
 			if err == nil {
 				break
-			} else if err == os.ErrNotExist {
+			} else if errors.Is(err, os.ErrNotExist) {
 				// Fallback to the next file.
 			} else if isCorrupted(err) {
 				lastCerr = err
@@ -404,14 +404,14 @@ func (fs *fileStorage) GetMeta() (FileDesc, error) {
 			pendNames[i] = fmt.Sprintf("CURRENT.%d", num)
 		}
 		pendCur, pendErr = tryCurrents(pendNames)
-		if pendErr != nil && pendErr != os.ErrNotExist && !isCorrupted(pendErr) {
+		if pendErr != nil && !errors.Is(pendErr, os.ErrNotExist) && !isCorrupted(pendErr) {
 			return FileDesc{}, pendErr
 		}
 	}
 
 	// Try CURRENT and CURRENT.bak.
 	curCur, curErr := tryCurrents([]string{"CURRENT", "CURRENT.bak"})
-	if curErr != nil && curErr != os.ErrNotExist && !isCorrupted(curErr) {
+	if curErr != nil && !errors.Is(curErr, os.ErrNotExist) && !isCorrupted(curErr) {
 		return FileDesc{}, curErr
 	}
 

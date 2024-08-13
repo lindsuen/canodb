@@ -7,6 +7,7 @@
 package storage
 
 import (
+	"errors"
 	"syscall"
 	"unsafe"
 )
@@ -18,7 +19,7 @@ var (
 )
 
 const (
-	_MOVEFILE_REPLACE_EXISTING = 1
+	MovefileReplaceExisting = 1
 )
 
 type windowsFileLock struct {
@@ -42,7 +43,7 @@ func newFileLock(path string, readOnly bool) (fl fileLock, err error) {
 		access = syscall.GENERIC_READ | syscall.GENERIC_WRITE
 	}
 	fd, err := syscall.CreateFile(pathp, access, shareMode, nil, syscall.OPEN_EXISTING, syscall.FILE_ATTRIBUTE_NORMAL, 0)
-	if err == syscall.ERROR_FILE_NOT_FOUND {
+	if errors.Is(err, syscall.ERROR_FILE_NOT_FOUND) {
 		fd, err = syscall.CreateFile(pathp, access, shareMode, nil, syscall.OPEN_ALWAYS, syscall.FILE_ATTRIBUTE_NORMAL, 0)
 	}
 	if err != nil {
@@ -72,7 +73,7 @@ func rename(oldpath, newpath string) error {
 	if err != nil {
 		return err
 	}
-	return moveFileEx(from, to, _MOVEFILE_REPLACE_EXISTING)
+	return moveFileEx(from, to, MovefileReplaceExisting)
 }
 
 func syncDir(name string) error { return nil }

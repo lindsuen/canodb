@@ -228,7 +228,7 @@ func (r *Reader) nextChunk(first bool) error {
 
 		// Read block.
 		n, err := io.ReadFull(r.r, r.buf[:])
-		if err != nil && err != io.EOF && err != io.ErrUnexpectedEOF {
+		if err != nil && err != io.EOF && !errors.Is(err, io.ErrUnexpectedEOF) {
 			return err
 		}
 		if n == 0 {
@@ -255,7 +255,7 @@ func (r *Reader) Next() (io.Reader, error) {
 	for {
 		if err := r.nextChunk(true); err == nil {
 			break
-		} else if err != errSkip {
+		} else if !errors.Is(err, errSkip) {
 			return nil, err
 		}
 	}
@@ -302,7 +302,7 @@ func (x *singleReader) Read(p []byte) (int, error) {
 		}
 		x.err = r.nextChunk(false)
 		if x.err != nil {
-			if x.err == errSkip {
+			if errors.Is(x.err, errSkip) {
 				x.err = io.ErrUnexpectedEOF
 			}
 			return 0, x.err
@@ -330,7 +330,7 @@ func (x *singleReader) ReadByte() (byte, error) {
 		}
 		x.err = r.nextChunk(false)
 		if x.err != nil {
-			if x.err == errSkip {
+			if errors.Is(x.err, errSkip) {
 				x.err = io.ErrUnexpectedEOF
 			}
 			return 0, x.err

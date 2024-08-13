@@ -77,3 +77,7 @@ func SetFd(err error, fd storage.FileDesc) error {
 		return err
 	}
 }
+
+func Is(err, target error) bool {
+	return errors.Is(err, target)
+}

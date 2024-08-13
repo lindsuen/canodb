@@ -113,7 +113,7 @@ func (h *dbHarness) closeDB0() error {
 
 func (h *dbHarness) closeDB() {
 	if h.db != nil {
-		if err := h.closeDB0(); err != nil && err != ErrClosed {
+		if err := h.closeDB0(); err != nil && !errors.Is(err, ErrClosed) {
 			h.t.Error("Close: got error: ", err)
 		}
 	}
@@ -130,7 +130,7 @@ func (h *dbHarness) reopenDB() {
 
 func (h *dbHarness) close() {
 	if h.db != nil {
-		if err := h.closeDB0(); err != nil && err != ErrClosed {
+		if err := h.closeDB0(); err != nil && !errors.Is(err, ErrClosed) {
 			h.t.Error("Close: got error: ", err)
 		}
 		h.db = nil
@@ -236,12 +236,12 @@ func (h *dbHarness) assertNumKeys(want int) {
 func (h *dbHarness) getr(db Reader, key string, expectFound bool) (found bool, v []byte) {
 	t := h.t
 	v, err := db.Get([]byte(key), h.ro)
-	switch err {
-	case ErrNotFound:
+	switch {
+	case errors.Is(err, ErrNotFound):
 		if expectFound {
 			t.Errorf("Get: key '%s' not found, want found", key)
 		}
-	case nil:
+	case err == nil:
 		found = true
 		if !expectFound {
 			t.Errorf("Get: key '%s' found, want not found", key)
@@ -1353,7 +1353,7 @@ func TestDB_CompactionTableOpenError(t *testing.T) {
 
 	h.stor.EmulateError(testutil.ModeOpen, storage.TypeTable, errors.New("open error during table compaction"))
 	go func() {
-		if err := h.db.CompactRange(util.Range{}); err != nil && err != ErrClosed {
+		if err := h.db.CompactRange(util.Range{}); err != nil && !errors.Is(err, ErrClosed) {
 			t.Error("CompactRange error: ", err)
 		}
 	}()
@@ -1796,7 +1796,7 @@ func TestDB_Concurrent(t *testing.T) {
 								t.Errorf("invalid seq number, %d > %d ", rx, tx)
 							}
 						}
-					} else if err != ErrNotFound {
+					} else if !errors.Is(err, ErrNotFound) {
 						t.Error("Get: got error: ", err)
 						return
 					}
@@ -2762,7 +2762,7 @@ func TestDB_TableCompactionBuilder(t *testing.T) {
 	v.release()
 }
 
-func testDB_IterTriggeredCompaction(t *testing.T, limitDiv int) {
+func testDBIterTriggeredCompaction(t *testing.T, limitDiv int) {
 	const (
 		vSize = 200 * opt.KiB
 		tSize = 100 * opt.MiB
@@ -2842,11 +2842,11 @@ func testDB_IterTriggeredCompaction(t *testing.T, limitDiv int) {
 }
 
 func TestDB_IterTriggeredCompaction(t *testing.T) {
-	testDB_IterTriggeredCompaction(t, 1)
+	testDBIterTriggeredCompaction(t, 1)
 }
 
 func TestDB_IterTriggeredCompactionHalf(t *testing.T) {
-	testDB_IterTriggeredCompaction(t, 2)
+	testDBIterTriggeredCompaction(t, 2)
 }
 
 func TestDB_ReadOnly(t *testing.T) {
@@ -2870,7 +2870,7 @@ func TestDB_ReadOnly(t *testing.T) {
 	h.stor.EmulateError(mode, storage.TypeAll, errors.New("read-only DB shouldn't writes"))
 
 	ro := func(key, value, wantValue string) {
-		if err := h.db.Put([]byte(key), []byte(value), h.wo); err != ErrReadOnly {
+		if err := h.db.Put([]byte(key), []byte(value), h.wo); !errors.Is(err, ErrReadOnly) {
 			t.Fatalf("unexpected error: %v", err)
 		}
 		h.getVal(key, wantValue)

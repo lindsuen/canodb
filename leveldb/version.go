@@ -7,6 +7,7 @@
 package leveldb
 
 import (
+	"errors"
 	"fmt"
 	"sync/atomic"
 	"time"
@@ -180,9 +181,9 @@ func (v *version) get(aux tFiles, ikey internalKey, ro *opt.ReadOptions, noValue
 			fikey, fval, ferr = v.s.tops.find(t, ikey, ro)
 		}
 
-		switch ferr {
-		case nil:
-		case ErrNotFound:
+		switch {
+		case ferr == nil:
+		case errors.Is(ferr, ErrNotFound):
 			return true
 		default:
 			err = ferr

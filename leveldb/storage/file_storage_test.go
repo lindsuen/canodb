@@ -7,6 +7,7 @@
 package storage
 
 import (
+	"errors"
 	"fmt"
 	"math/rand"
 	"os"
@@ -256,7 +257,7 @@ func TestFileStorage_Meta(t *testing.T) {
 		}
 		ret, err := fs.GetMeta()
 		if tc.notExist {
-			if err != os.ErrNotExist {
+			if !errors.Is(err, os.ErrNotExist) {
 				t.Fatalf("expect ErrNotExist, got: %v", err)
 			}
 		} else if tc.corrupt {

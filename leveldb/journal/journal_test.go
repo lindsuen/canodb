@@ -13,6 +13,7 @@ package journal
 import (
 	"bytes"
 	"encoding/binary"
+	"errors"
 	"fmt"
 	"io"
 	"math/rand"
@@ -415,7 +416,7 @@ func TestCorrupt_MissingLastBlock(t *testing.T) {
 		t.Fatal(err)
 	}
 	_, err = io.Copy(io.Discard, rr)
-	if err != io.ErrUnexpectedEOF {
+	if !errors.Is(err, io.ErrUnexpectedEOF) {
 		t.Fatalf("read #1: unexpected error: %v", err)
 	}
 
@@ -580,7 +581,7 @@ func TestCorrupt_CorruptedMiddleBlock(t *testing.T) {
 		t.Fatal(err)
 	}
 	_, err = io.Copy(io.Discard, rr)
-	if err != io.ErrUnexpectedEOF {
+	if !errors.Is(err, io.ErrUnexpectedEOF) {
 		t.Fatalf("read #1: unexpected error: %v", err)
 	}
 
@@ -700,7 +701,7 @@ func TestCorrupt_CorruptedLastBlock(t *testing.T) {
 		t.Fatal(err)
 	}
 	_, err = io.Copy(io.Discard, rr)
-	if err != io.ErrUnexpectedEOF {
+	if !errors.Is(err, io.ErrUnexpectedEOF) {
 		t.Fatalf("read #3: unexpected error: %v", err)
 	}
 
@@ -771,7 +772,7 @@ func TestCorrupt_FirstChuckLengthOverflow(t *testing.T) {
 		t.Fatal(err)
 	}
 	_, err = io.Copy(io.Discard, rr)
-	if err != io.ErrUnexpectedEOF {
+	if !errors.Is(err, io.ErrUnexpectedEOF) {
 		t.Fatalf("read #1: unexpected error: %v", err)
 	}
 

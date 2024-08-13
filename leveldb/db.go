@@ -583,7 +583,7 @@ func (db *DB) recoverJournal() error {
 
 				buf.Reset()
 				if _, err := buf.ReadFrom(r); err != nil {
-					if err == io.ErrUnexpectedEOF {
+					if errors.Is(err, io.ErrUnexpectedEOF) {
 						// This is error returned due to corruption, with strict == false.
 						continue
 					}
@@ -723,7 +723,7 @@ func (db *DB) recoverJournalRO() error {
 
 				buf.Reset()
 				if _, err := buf.ReadFrom(r); err != nil {
-					if err == io.ErrUnexpectedEOF {
+					if errors.Is(err, io.ErrUnexpectedEOF) {
 						// This is error returned due to corruption, with strict == false.
 						continue
 					}
@@ -772,7 +772,7 @@ func memGet(mdb *memdb.DB, ikey internalKey, icmp *iComparer) (ok bool, mv []byt
 			return true, mv, nil
 
 		}
-	} else if err != ErrNotFound {
+	} else if !errors.Is(err, ErrNotFound) {
 		return true, nil, err
 	}
 	return
@@ -810,7 +810,7 @@ func (db *DB) get(auxm *memdb.DB, auxt tFiles, key []byte, seq uint64, ro *opt.R
 }
 
 func nilIfNotFound(err error) error {
-	if err == ErrNotFound {
+	if errors.Is(err, ErrNotFound) {
 		return nil
 	}
 	return err
@@ -846,7 +846,7 @@ func (db *DB) has(auxm *memdb.DB, auxt tFiles, key []byte, seq uint64, ro *opt.R
 	}
 	if err == nil {
 		ret = true
-	} else if err == ErrNotFound {
+	} else if errors.Is(err, ErrNotFound) {
 		err = nil
 	}
 	return
@@ -1183,7 +1183,7 @@ func (db *DB) Close() error {
 	var err error
 	select {
 	case err = <-db.compErrC:
-		if err == ErrReadOnly {
+		if errors.Is(err, ErrReadOnly) {
 			err = nil
 		}
 	default:

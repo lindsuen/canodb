@@ -6,6 +6,7 @@ package util
 
 import (
 	"bytes"
+	"errors"
 	"io"
 	"math/rand"
 	"runtime"
@@ -26,10 +27,10 @@ func init() {
 
 // Verify that contents of buf match the string s.
 func check(t *testing.T, testname string, buf *Buffer, s string) {
-	bytes := buf.Bytes()
+	b := buf.Bytes()
 	str := buf.String()
-	if buf.Len() != len(bytes) {
-		t.Errorf("%s: buf.Len() == %d, len(buf.Bytes()) == %d", testname, buf.Len(), len(bytes))
+	if buf.Len() != len(b) {
+		t.Errorf("%s: buf.Len() == %d, len(buf.Bytes()) == %d", testname, buf.Len(), len(b))
 	}
 
 	if buf.Len() != len(str) {
@@ -40,8 +41,8 @@ func check(t *testing.T, testname string, buf *Buffer, s string) {
 		t.Errorf("%s: buf.Len() == %d, len(s) == %d", testname, buf.Len(), len(s))
 	}
 
-	if string(bytes) != s {
-		t.Errorf("%s: string(buf.Bytes()) == %q, s == %q", testname, string(bytes), s)
+	if string(b) != s {
+		t.Errorf("%s: string(buf.Bytes()) == %q, s == %q", testname, string(b), s)
 	}
 }
 
@@ -270,16 +271,16 @@ func TestReadBytes(t *testing.T) {
 		buf := NewBuffer([]byte(test.buffer))
 		var err error
 		for _, expected := range test.expected {
-			var bytes []byte
-			bytes, err = buf.ReadBytes(test.delim)
-			if string(bytes) != expected {
-				t.Errorf("expected %q, got %q", expected, bytes)
+			var b []byte
+			b, err = buf.ReadBytes(test.delim)
+			if string(b) != expected {
+				t.Errorf("expected %q, got %q", expected, b)
 			}
 			if err != nil {
 				break
 			}
 		}
-		if err != test.err {
+		if !errors.Is(err, test.err) {
 			t.Errorf("expected error %v, got %v", test.err, err)
 		}
 	}
