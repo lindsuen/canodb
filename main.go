@@ -31,7 +31,6 @@ func main() {
 		os.Exit(1)
 	}
 
-	// open leveldb
 	db, err := leveldb.OpenFile(dataDirectory, nil)
 	if err != nil {
 		fmt.Println(err)
@@ -51,7 +50,6 @@ func main() {
 	}
 	defer f.Close()
 
-	// leveldb's iterator
 	iter := db.NewIterator(nil, nil)
 	for iter.Next() {
 		key := iter.Key()
@@ -81,10 +79,7 @@ func main() {
 
 func fileExist(file string) bool {
 	_, err := os.Stat(file)
-	if os.IsNotExist(err) {
-		return false
-	}
-	return true
+	return os.IsExist(err)
 }
 
 func parseFlagArgs() {
@@ -99,9 +94,9 @@ func encodeKV(key, value []byte) []byte {
 }
 
 func encode(b []byte) string {
-	return base64.RawStdEncoding.EncodeToString(b)
+	return base64.RawURLEncoding.EncodeToString(b)
 }
 
 func decode(s string) ([]byte, error) {
-	return base64.RawStdEncoding.DecodeString(s)
+	return base64.RawURLEncoding.DecodeString(s)
 }
