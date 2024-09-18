@@ -20,3 +20,5 @@ canodb
 canodb-cli
 /bin
 /data
+*.dump
+*.dmp
