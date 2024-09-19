@@ -9,59 +9,60 @@ package main
 import (
 	"bufio"
 	"encoding/base64"
-	"flag"
 	"fmt"
 	"os"
 
+	args "github.com/lindsuen/canodb/flag"
 	"github.com/lindsuen/canodb/leveldb"
 )
 
 var (
-	f *os.File
-
-	dataDirectory string
-	exportFile    string
-	importFile    string
+	ldb     *leveldb.DB
+	err     error
+	dmpFile *os.File
 )
 
 func main() {
-	parseFlagArgs()
-	if dataDirectory == "" {
-		fmt.Println("canodb-cli : error: -d must be specified")
+	args.ParseFlagArgs()
+
+	if isExist(args.DataDirectory) && isDir(args.DataDirectory) {
+		ldb, err = leveldb.OpenFile(args.DataDirectory, nil)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println("canodb-cli: CanoDB has been connected.")
+		}
+		defer ldb.Close()
+	} else {
+		fmt.Println("canodb-cli: The directory " + args.DataDirectory + " is not existential.")
 		os.Exit(1)
 	}
 
-	db, err := leveldb.OpenFile(dataDirectory, nil)
-	if err != nil {
-		fmt.Println(err)
-	}
-	defer db.Close()
-
-	if fileExist(exportFile) {
-		f, err = os.OpenFile(exportFile, os.O_APPEND, 0666)
+	if isExist(args.ExportFile) {
+		dmpFile, err = os.OpenFile(args.ExportFile, os.O_WRONLY, 0666)
 		if err != nil {
 			fmt.Println(err)
 		}
 	} else {
-		f, err = os.Create(exportFile)
+		dmpFile, err = os.Create(args.ExportFile)
 		if err != nil {
 			fmt.Println(err)
 		}
 	}
-	defer f.Close()
+	defer dmpFile.Close()
 
-	iter := db.NewIterator(nil, nil)
+	iter := ldb.NewIterator(nil, nil)
 	for iter.Next() {
 		key := iter.Key()
 		value := iter.Value()
-		fmt.Println("key: " + string(key) + ", value: " + string(value))
+		fmt.Println("canodb-cli: key: " + string(key) + ", value: " + string(value))
 
-		err = f.Sync()
+		err = dmpFile.Sync()
 		if err != nil {
 			fmt.Println(err)
 		}
-		w := bufio.NewWriter(f)
-		_, err = w.Write(encodeKV(key, value))
+		w := bufio.NewWriter(dmpFile)
+		_, err = w.Write(keyValueEncoding(key, value))
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -77,26 +78,27 @@ func main() {
 	}
 }
 
-func fileExist(file string) bool {
-	_, err := os.Stat(file)
-	return os.IsExist(err)
+func isDir(s string) bool {
+	d, err := os.Stat(s)
+	if err != nil {
+		return false
+	}
+	return d.IsDir()
 }
 
-func parseFlagArgs() {
-	flag.StringVar(&dataDirectory, "d", "", "The data directory of CanoDB.")
-	flag.StringVar(&exportFile, "e", "db.dump", "Export the data.")
-	flag.StringVar(&importFile, "i", "db.dump", "Import the data.")
-	flag.Parse()
+func isExist(f string) bool {
+	_, err := os.Stat(f)
+	return !os.IsNotExist(err)
 }
 
-func encodeKV(key, value []byte) []byte {
-	return []byte(encode(key) + ":" + encode(value) + "\n")
+func keyValueEncoding(key, value []byte) []byte {
+	return []byte(base64Encoding(key) + ":" + base64Encoding(value) + "\n")
 }
 
-func encode(b []byte) string {
+func base64Encoding(b []byte) string {
 	return base64.RawURLEncoding.EncodeToString(b)
 }
 
-func decode(s string) ([]byte, error) {
+func base64Decoding(s string) ([]byte, error) {
 	return base64.RawURLEncoding.DecodeString(s)
 }
