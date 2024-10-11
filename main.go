@@ -51,6 +51,14 @@ func main() {
 	}
 	defer dmpFile.Close()
 
+	if args.ImportFile != "" {
+		s, _ := os.ReadFile(args.ImportFile)
+		k, v := keyValueDecoding(s)
+		_ = ldb.Put(k, v, nil)
+	} else {
+		fmt.Println("canodb-cli: ImportFile is not existential.")
+	}
+
 	iter := ldb.NewIterator(nil, nil)
 	for iter.Next() {
 		key := iter.Key()
@@ -95,10 +103,22 @@ func keyValueEncoding(key, value []byte) []byte {
 	return []byte(base64Encoding(key) + ":" + base64Encoding(value) + "\n")
 }
 
+func keyValueDecoding(s []byte) (key, value []byte) {
+	var index int
+	for i, v := range s {
+		if string(v) == ":" {
+			index = i
+		}
+	}
+	sKey, _ := base64Decoding(s[:index])
+	sValue, _ := base64Decoding(s[index:])
+	return sKey, sValue
+}
+
 func base64Encoding(b []byte) string {
 	return base64.RawURLEncoding.EncodeToString(b)
 }
 
-func base64Decoding(s string) ([]byte, error) {
-	return base64.RawURLEncoding.DecodeString(s)
+func base64Decoding(s []byte) ([]byte, error) {
+	return base64.RawURLEncoding.DecodeString(string(s))
 }
