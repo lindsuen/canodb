@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 // Taken from: https://code.google.com/p/leveldb-go/source/browse/leveldb/record/record.go?r=1d5ccbe03246da926391ee12d1c6caae054ff4b0
-// License, authors and contributors informations can be found at bellow URLs respectively:
+// License, authors and contributors information can be found at bellow URLs respectively:
 // 	https://code.google.com/p/leveldb-go/source/browse/LICENSE
 //	https://code.google.com/p/leveldb-go/source/browse/AUTHORS
 //  https://code.google.com/p/leveldb-go/source/browse/CONTRIBUTORS
@@ -22,7 +22,7 @@
 // writer without starting a new journal. To start a new journal after flushing,
 // call Next.
 //
-// Neither Readers or Writers are safe to use concurrently.
+// Neither Readers nor Writers are safe to use concurrently.
 //
 // Example code:
 //
@@ -243,8 +243,8 @@ func (r *Reader) nextChunk(first bool) error {
 }
 
 // Next returns a reader for the next journal. It returns io.EOF if there are no
-// more journals. The reader returned becomes stale after the next Next call,
-// and should no longer be used. If strict is false, the reader will returns
+// more journals. The reader returned becomes stale after the Next call,
+// and should no longer be used. If strict is false, the reader will return
 // io.ErrUnexpectedEOF error when found corrupted journal.
 func (r *Reader) Next() (io.Reader, error) {
 	r.seq++

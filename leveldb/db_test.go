@@ -1899,7 +1899,7 @@ func TestDB_ConcurrentWrite(t *testing.T) {
 				kstr := fmt.Sprintf("put-%d.%d", i, k)
 				vstr := fmt.Sprintf("v%d", k)
 				h.put(kstr, vstr)
-				// Key should immediately available after put returns.
+				// Key should be immediately available after put returns.
 				h.getVal(kstr, vstr)
 			}
 		}(i)
@@ -1915,7 +1915,7 @@ func TestDB_ConcurrentWrite(t *testing.T) {
 					batch.Put([]byte(fmt.Sprintf("batch-%d.%d.%d", i, k, j)), []byte(fmt.Sprintf("v%d", k)))
 				}
 				h.write(batch)
-				// Key should immediately available after put returns.
+				// Key should be immediately available after put returns.
 				for j := 0; j < bk; j++ {
 					h.getVal(fmt.Sprintf("batch-%d.%d.%d", i, k, j), fmt.Sprintf("v%d", k))
 				}

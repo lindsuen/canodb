@@ -32,7 +32,7 @@ type Transaction struct {
 }
 
 // Get gets the value for the given key. It returns ErrNotFound if the
-// DB does not contains the key.
+// DB does not contain the key.
 //
 // The returned slice is its own copy, it is safe to modify the contents
 // of the returned slice.
@@ -46,7 +46,7 @@ func (tr *Transaction) Get(key []byte, ro *opt.ReadOptions) ([]byte, error) {
 	return tr.db.get(tr.mem.DB, tr.tables, key, tr.seq, ro)
 }
 
-// Has returns true if the DB does contains the given key.
+// Has returns true if the DB contains the given key.
 //
 // It is safe to modify the contents of the argument after Has returns.
 func (tr *Transaction) Has(key []byte, ro *opt.ReadOptions) (bool, error) {

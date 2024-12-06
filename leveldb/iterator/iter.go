@@ -53,7 +53,7 @@ type CommonIterator interface {
 	IteratorSeeker
 
 	// util.Releaser is the interface that wraps basic Release method.
-	// When called Release will releases any resources associated with the
+	// When called Release will release any resources associated with the
 	// iterator.
 	util.Releaser
 
