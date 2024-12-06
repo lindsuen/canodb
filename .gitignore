@@ -1,0 +1,13 @@
+# MacOS
+__MACOSX/
+.DS_Store
+
+# JetBrains IDEs and Fleet
+.idea/
+.fleet/
+
+# Vim
+*.swp
+
+# Visual Studio Code
+.vscode/
