@@ -152,8 +152,8 @@ func (db *DB) unlockWrite(overflow bool, merged int, err error) {
 
 // ourBatch is batch that we can modify.
 func (db *DB) writeLocked(batch, ourBatch *Batch, merge, sync bool) error {
-	// Try to flush memdb. This method would also trying to throttle writes
-	// if it is too fast and compaction cannot catch-up.
+	// Try to flush memdb. This method would also try to throttle writes
+	// if it is too fast and compaction cannot catch up.
 	mdb, mdbFree, err := db.flush(batch.internalLen)
 	if err != nil {
 		db.unlockWrite(false, 0, err)
@@ -268,7 +268,7 @@ func (db *DB) Write(batch *Batch, wo *opt.WriteOptions) error {
 		return err
 	}
 
-	// If the batch size is larger than write buffer, it may justified to write
+	// If the batch size is larger than write buffer, it may be justified to write
 	// using transaction instead. Using transaction the batch will be written
 	// into tables directly, skipping the journaling.
 	if batch.internalLen > db.s.o.GetWriteBuffer() && !db.s.o.GetDisableLargeBatchTransaction() {
@@ -366,7 +366,7 @@ func (db *DB) putRec(kt keyType, key, value []byte, wo *opt.WriteOptions) error 
 }
 
 // Put sets the value for the given key. It overwrites any previous value
-// for that key; a DB is not a multi-map. Write merge also applies for Put, see
+// for that key; a DB is not a multiMap. Write merge also applies for Put, see
 // Write.
 //
 // It is safe to modify the contents of the arguments after Put returns but not
@@ -375,7 +375,7 @@ func (db *DB) Put(key, value []byte, wo *opt.WriteOptions) error {
 	return db.putRec(keyTypeVal, key, value, wo)
 }
 
-// Delete deletes the value for the given key. Delete will not returns error if
+// Delete deletes the value for the given key. Delete will not return error if
 // key doesn't exist. Write merge also applies for Delete, see Write.
 //
 // It is safe to modify the contents of the arguments after Delete returns but
@@ -399,7 +399,7 @@ func isMemOverlaps(icmp *iComparer, mem *memdb.DB, min, max []byte) bool {
 //
 // A nil Range.Start is treated as a key before all keys in the DB.
 // And a nil Range.Limit is treated as a key after all keys in the DB.
-// Therefore if both is nil then it will compact entire DB.
+// Therefore, if both is nil then it will compact entire DB.
 func (db *DB) CompactRange(r util.Range) error {
 	if err := db.ok(); err != nil {
 		return err

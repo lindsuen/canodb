@@ -449,7 +449,7 @@ func (w *Writer) Flush() error {
 }
 
 // Reset resets the journal writer, allows reuse of the journal writer. Reset
-// will also closes the journal writer if not already.
+// will also close the journal writer if not already.
 func (w *Writer) Reset(writer io.Writer) (err error) {
 	w.seq++
 	if w.err == nil {

@@ -130,9 +130,9 @@ func (tr *Transaction) put(kt keyType, key, value []byte) error {
 }
 
 // Put sets the value for the given key. It overwrites any previous value
-// for that key; a DB is not a multi-map.
+// for that key; a DB is not a multiMap.
 // Please note that the transaction is not compacted until committed, so if you
-// writes 10 same keys, then those 10 same keys are in the transaction.
+// write 10 same keys, then those 10 same keys are in the transaction.
 //
 // It is safe to modify the contents of the arguments after Put returns.
 func (tr *Transaction) Put(key, value []byte, wo *opt.WriteOptions) error {
@@ -146,7 +146,7 @@ func (tr *Transaction) Put(key, value []byte, wo *opt.WriteOptions) error {
 
 // Delete deletes the value for the given key.
 // Please note that the transaction is not compacted until committed, so if you
-// writes 10 same keys, then those 10 same keys are in the transaction.
+// write 10 same keys, then those 10 same keys are in the transaction.
 //
 // It is safe to modify the contents of the arguments after Delete returns.
 func (tr *Transaction) Delete(key []byte, wo *opt.WriteOptions) error {
@@ -161,7 +161,7 @@ func (tr *Transaction) Delete(key []byte, wo *opt.WriteOptions) error {
 // Write apply the given batch to the transaction. The batch will be applied
 // sequentially.
 // Please note that the transaction is not compacted until committed, so if you
-// writes 10 same keys, then those 10 same keys are in the transaction.
+// write 10 same keys, then those 10 same keys are in the transaction.
 //
 // It is safe to modify the contents of the arguments after Write returns.
 func (tr *Transaction) Write(b *Batch, wo *opt.WriteOptions) error {
@@ -299,7 +299,7 @@ func (db *DB) OpenTransaction() (*Transaction, error) {
 		return nil, err
 	}
 
-	// The write happen synchronously.
+	// The written happen synchronously.
 	select {
 	case db.writeLockC <- struct{}{}:
 	case err := <-db.compPerErrC:
